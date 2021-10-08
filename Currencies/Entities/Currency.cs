@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace Currencies
 {
@@ -16,9 +17,12 @@ namespace Currencies
         [JsonProperty("Cur_Name")]
         public string Name { get; set; }
 
+        [JsonProperty("Cur_DateEnd")]
+        public DateTime DateEnd { get; set; }
+
         public override string ToString()
         {
-            return $"{Id} - {Code} - {Abbreviation} - {Name}";
+            return $"{Id} - {Code} - {Abbreviation} - {Name} - {DateEnd}";
         }
     }
 }

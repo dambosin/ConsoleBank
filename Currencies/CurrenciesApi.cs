@@ -3,28 +3,34 @@ using Flurl;
 using Flurl.Http;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Currencies
 {
-    public partial class CurrenciesApi : ICurrenciesApi
+    public class CurrenciesApi : ICurrenciesApi
     {
         private const string CurrenciesApiUrl = "https://www.nbrb.by/api/exrates/currencies";
         private const string CurrenciyRateApiUrl = "https://www.nbrb.by/api/exrates/rates/";
 
-        public Task<Currency[]> GetCurrencies()
+        public async Task<Currency[]> GetCurrencies(bool afterDenomination)
         {
-            return CallApi(() =>
-            {
-                return CurrenciesApiUrl.GetJsonAsync<Currency[]>();
-            });
+            var currencies = await CallApi(() => CurrenciesApiUrl.GetJsonAsync<Currency[]>());
+            return afterDenomination 
+                ? currencies.Where(currency => currency.DateEnd > DateTime.Now).ToArray() 
+                : currencies;
         }
         
         public Task<CurrencyRate> GetCurrencyRate(int currencyId)
         {
-            return CallApi(() =>
-            {
-                return CurrenciyRateApiUrl.AppendPathSegment(currencyId).GetJsonAsync<CurrencyRate>();
-            });
+            return CallApi(() => CurrenciyRateApiUrl.AppendPathSegment(currencyId).GetJsonAsync<CurrencyRate>());
+        }
+
+        public Task<CurrencyRate> GetCurrencyRate(string currencyAbbreviation)
+        {
+            return CallApi(() => CurrenciyRateApiUrl
+                .AppendPathSegment(currencyAbbreviation)
+                .SetQueryParam("parammode", 2)
+                .GetJsonAsync<CurrencyRate>());
         }
 
         private async Task<T> CallApi<T>(Func<Task<T>> func)

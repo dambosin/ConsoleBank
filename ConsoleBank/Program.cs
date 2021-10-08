@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Currencies;
-using System.Linq;
 
 namespace ConsoleBank
 {
     class Program
     {
+        private static ICurrencyInfoService _infoService = new CurrencyInfoService(new CurrenciesApi());
         static async Task Main(string[] args)
         {
-            var api = new CurrenciesApi();
-            Currency[] currencies = await api.GetCurrencies();
+            
+            
+            var currencies = await _infoService.GetAvailableCurrencies();
             foreach(var currency in currencies)
             {
                 Console.WriteLine(currency);
             }
-
-            var currencyRate = await api.GetCurrencyRate(20000);
-            Console.WriteLine(currencyRate);
+            var Rate = await _infoService.GetCurrencyRate("UAH");
+            Console.WriteLine(Rate);
 
 
 
