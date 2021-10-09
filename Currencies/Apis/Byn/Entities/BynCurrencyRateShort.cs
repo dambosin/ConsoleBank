@@ -1,21 +1,17 @@
 ﻿using Newtonsoft.Json;
+using System;
 
 namespace Currencies.Entities
 {
-    public class CurrencyRate
+    public class BynCurrencyRateShort
     {
         [JsonProperty("Cur_ID")]
         public int Id { get; set; }
 
-        [JsonProperty("Cur_Scale")]
-        public int Scale { get; set; }
+        [JsonProperty("Date")]
+        public DateTime Date { get; set; }
 
         [JsonProperty("Cur_OfficialRate")]
         public double Rate { get; set; }
-
-        public override string ToString()
-        {
-            return $"{Id} - {Scale} - {Rate}";
-        }
     }
 }

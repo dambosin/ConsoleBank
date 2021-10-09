@@ -3,7 +3,7 @@ using System;
 
 namespace Currencies
 {
-    public class Currency
+    public class BynCurrency
     {
         [JsonProperty("Cur_ID")]
         public int Id { get; set; }
@@ -19,6 +19,9 @@ namespace Currencies
 
         [JsonProperty("Cur_DateEnd")]
         public DateTime DateEnd { get; set; }
+        
+        [JsonProperty("Cur_Scale")]
+        public int Scale { get; set; }
 
         public override string ToString()
         {
