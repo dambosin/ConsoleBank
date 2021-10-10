@@ -1,19 +1,42 @@
 ﻿using Currencies.Apis.Rub.Entities;
 using Currencies.Common;
+using Flurl;
 using Flurl.Http;
 using System;
-using System.Threading.Tasks;
 using System.Linq;
-using Flurl;
+using System.Threading.Tasks;
 
 namespace Currencies.Apis.Rub
 {
     public class RubCurrenciesApi : ICurrenciesApi
     {
+        private const string _charCode = "RUB";
         private const string BaseApiUrl = "https://www.cbr.ru/scripts";
         private readonly string CurrenciesApiUrl = $"{BaseApiUrl}/XML_valFull.asp";
         private readonly string CurrencyRateApiUrl = $"{BaseApiUrl}/XML_daily.asp";
-        private readonly string CurrencyRateDynamicsApiUrl = $"{BaseApiUrl}/rates/dynamics/";
+        private readonly string CurrencyRateDynamicsApiUrl = $"{BaseApiUrl}/XML_dynamic.asp";
+
+        public async Task<CurrencyRateModel[]> GetDynamics(string charCode, DateTime start, DateTime end)
+        {
+            var currency = (await GetCurrencies()).Single(x => x.CharCode == charCode);
+            var xmlResponse = await CallApi(() => CurrencyRateDynamicsApiUrl
+            .SetQueryParams(new
+            {
+                date_req1 = start.ToString("dd/MM/yyyy"),
+                date_req2 = end.ToString("dd/MM/yyyy"),
+                VAL_NM_RQ = currency.Id
+            }).GetStringAsync());
+            var response = XmlUtils.ParseXml<RubCurrencyDynamicsResponse>(xmlResponse);
+            return response.Items.Select(item => new CurrencyRateModel
+            {
+                Id = currency.Id,
+                CharCode = charCode,
+                Date = item.Date,
+                Name = currency.Name,
+                Nominal = item.Nominal,
+                Rate = item.Rate
+            }).ToArray();
+        }
 
         public async Task<CurrencyModel[]> GetCurrencies(DateTime? onDate = null)
         {
@@ -29,6 +52,18 @@ namespace Currencies.Apis.Rub
 
         public async Task<CurrencyRateModel> GetCurrencyRate(string charCode, DateTime? onDate = null)
         {
+            if(charCode == _charCode)
+            {
+                return new CurrencyRateModel
+                {
+                    Id = "R0000",
+                    Name = "Российский рубль",
+                    CharCode = _charCode,
+                    Nominal = 1,
+                    Rate = 1,
+                    Date = DateTime.Today
+                };
+            }
             var xmlResponse = await CallApi(() => CurrencyRateApiUrl.SetQueryParam("date_req", onDate).GetStringAsync());
             var response = XmlUtils.ParseXml<RubCurrencyRateResponse>(xmlResponse);
             var rate = response.Items.Single(item => item.CharCode == charCode);
@@ -41,11 +76,6 @@ namespace Currencies.Apis.Rub
                 Rate = rate.Rate,
                 Date = response.Date
             };
-        }
-
-        public Task<CurrencyRateModel[]> GetDynamics(string charCode, DateTime start, DateTime end)
-        {
-            throw new NotImplementedException();
         }
 
         private static async Task<T> CallApi<T>(Func<Task<T>> func)

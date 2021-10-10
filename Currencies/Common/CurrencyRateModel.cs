@@ -10,5 +10,4 @@ namespace Currencies.Common
 
         public DateTime Date { get; set; }
     }
-
 }

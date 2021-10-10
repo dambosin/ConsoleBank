@@ -17,7 +17,14 @@ namespace Currencies.Apis.Rub.Entities
         [XmlElement("Name")]
         public string Name { get; set; }
 
-        [XmlElement("Value")]
+        [XmlIgnore]
         public double Rate { get; set; }
+
+        [XmlElement("Value")]
+        public string RateSerialized
+        {
+            get => Rate.ToString("G17");
+            set => Rate = double.Parse(value);
+        }
     }
 }

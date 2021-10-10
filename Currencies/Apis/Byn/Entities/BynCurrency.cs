@@ -19,7 +19,7 @@ namespace Currencies
 
         [JsonProperty("Cur_DateEnd")]
         public DateTime DateEnd { get; set; }
-        
+
         [JsonProperty("Cur_Scale")]
         public int Scale { get; set; }
 

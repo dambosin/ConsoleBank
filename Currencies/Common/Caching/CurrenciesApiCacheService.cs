@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Currencies.Common;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using Currencies.Common;
+using System.Threading.Tasks;
 
 namespace Currencies
 {
@@ -22,7 +22,7 @@ namespace Currencies
             _currenciesApi = currenciesApi;
         }
 
-        public async  Task<CurrencyModel[]> GetCurrencies(DateTime? onDate = null)
+        public async Task<CurrencyModel[]> GetCurrencies(DateTime? onDate = null)
         {
             if (_currenciesCache.Any())
             {
@@ -38,13 +38,13 @@ namespace Currencies
             var key = GetKey(onDate);
             if (_ratesCache.ContainsKey(key))
             {
-                var rate =_ratesCache[key].SingleOrDefault(rate => rate.CharCode == charCode);
+                var rate = _ratesCache[key].SingleOrDefault(rate => rate.CharCode == charCode);
                 if (rate != null)
                 {
                     return rate;
                 }
             }
-            
+
             return await GetNewCurrencyRate(charCode, onDate);
         }
 
@@ -66,7 +66,7 @@ namespace Currencies
             return (date ?? DateTime.Today).ToString("d");
         }
 
-        private void AddToCache( string date, CurrencyRateModel rate)
+        private void AddToCache(string date, CurrencyRateModel rate)
         {
             if (_ratesCache.ContainsKey(date))
             {
@@ -75,7 +75,7 @@ namespace Currencies
             }
             else
             {
-                _ratesCache.Add(date, new List<CurrencyRateModel>{rate});
+                _ratesCache.Add(date, new List<CurrencyRateModel> { rate });
             }
         }
     }

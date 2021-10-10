@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal", "ConsoleBank\Portal.csproj", "{43020E58-15D8-4442-A444-D5912C7C59D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal", "ConsoleBank\Portal.csproj", "{43020E58-15D8-4442-A444-D5912C7C59D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Currencies", "Currencies\Currencies.csproj", "{9CCAB5E8-6D61-420D-B8BD-CA1E5B969C6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Currencies", "Currencies\Currencies.csproj", "{9CCAB5E8-6D61-420D-B8BD-CA1E5B969C6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Accounting", "Accounting\Accounting.csproj", "{68D9CFA9-A03A-4B45-9A6F-CCCA58ED9D9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9CCAB5E8-6D61-420D-B8BD-CA1E5B969C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CCAB5E8-6D61-420D-B8BD-CA1E5B969C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CCAB5E8-6D61-420D-B8BD-CA1E5B969C6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68D9CFA9-A03A-4B45-9A6F-CCCA58ED9D9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68D9CFA9-A03A-4B45-9A6F-CCCA58ED9D9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68D9CFA9-A03A-4B45-9A6F-CCCA58ED9D9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68D9CFA9-A03A-4B45-9A6F-CCCA58ED9D9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

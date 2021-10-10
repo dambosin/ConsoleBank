@@ -1,17 +1,23 @@
 ﻿using Currencies.Common;
+using System.Threading.Tasks;
 
 namespace Currencies
 {
-    public class CurrenciesConverter : ICurrenciesConverter
+    public static class CurrenciesConverter
     {
-        public double ConvertTo(CurrencyRateModel rate, int amount)
+        public static decimal ConvertToLocal(CurrencyRateModel rate, decimal amount)
         {
-            return amount / rate.Nominal * rate.Rate;
+            return amount / rate.Nominal * (decimal)rate.Rate;
         }
 
-        public double ConvertFrom(CurrencyRateModel rate, int amount)
+        public static decimal ConvertFromLocal(CurrencyRateModel rate, decimal amount)
         {
-            return amount / rate.Rate * rate.Nominal;
+            return amount / (decimal)rate.Rate * rate.Nominal;
+        }
+
+        public static decimal ConvertFromTo(CurrencyRateModel from, CurrencyRateModel to, decimal amount)
+        {
+            return ConvertFromLocal(to, ConvertToLocal(from, amount));
         }
     }
 }

@@ -6,5 +6,4 @@
         public string CharCode { get; set; }
         public string Name { get; set; }
     }
-
 }

@@ -1,15 +1,16 @@
-﻿using Currencies.Entities;
+﻿using Currencies.Common;
+using Currencies.Entities;
 using Flurl;
 using Flurl.Http;
 using System;
-using System.Threading.Tasks;
 using System.Linq;
-using Currencies.Common;
+using System.Threading.Tasks;
 
 namespace Currencies
 {
     public class BynCurrenciesApi : ICurrenciesApi
     {
+        private const string _charCode = "BYN";
         private const string BaseApiUrl = "https://www.nbrb.by/api/exrates";
         private readonly string CurrenciesApiUrl = $"{BaseApiUrl}/currencies";
         private readonly string CurrencyRateApiUrl = $"{BaseApiUrl}/rates/";
@@ -27,10 +28,20 @@ namespace Currencies
             }).ToArray();
         }
 
-        
-        
         public async Task<CurrencyRateModel> GetCurrencyRate(string charCode, DateTime? onDate = null)
         {
+            if(charCode == _charCode)
+            {
+                return new CurrencyRateModel
+                {
+                    Id = "0",
+                    Name = "Беларусский рубль",
+                    CharCode = _charCode,
+                    Nominal = 1,
+                    Rate = 1,
+                    Date = DateTime.Today
+                };
+            }
             var currencyRate = await CallApi(() => CurrencyRateApiUrl
                     .AppendPathSegment(charCode)
                     .SetQueryParams(new
@@ -49,7 +60,6 @@ namespace Currencies
                 Date = onDate ?? DateTime.Today
             };
         }
-      
         public async Task<CurrencyRateModel[]> GetDynamics(string charCode, DateTime start, DateTime end)
         {
             var currencies = await GetCurrenciesInternal(end);
@@ -91,7 +101,5 @@ namespace Currencies
                 throw new CurrencyNotAvailableException("Currency not available");
             }
         }
-
-
     }
 }
