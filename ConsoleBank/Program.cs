@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Accounting;
+using Accounting.TrackingService;
 using Currencies;
 using Currencies.Apis.Rub;
 using Currencies.Common.Conversion;
@@ -24,15 +25,22 @@ namespace ConsoleBank
         private static IAccountAcquiringService _acquiringService = 
             new AccountAcquiringService(_repository);
 
+        private static IAccountTransferService _transferService = 
+            new AccountTransferService(
+                _repository,
+                _acquiringService,
+                _conversionService);
+
         private static IAccountManagmentService _accountManagmentService =
             new AccountManagementService(
                 _repository,
                 _acquiringService,
-                new AccountTransferService(
-                    _repository,
-                    _acquiringService,
-                    _conversionService));
+                _transferService);
 
+        private static IAccountOperationTrackingService _trackingService = 
+            new AccountOperationTrackingService(
+                _acquiringService, 
+                _transferService);
 
         static async Task Main(string[] args)
         {
@@ -65,6 +73,15 @@ namespace ConsoleBank
 
             await _accountManagmentService.DeleteAccount(accountId2);
 
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            var result = _trackingService.GetOperations();
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"{item.AccountId} - {item.Amount} - {item.OperationType}");
+            }
             //account2 = await _accountManagmentService.GetAccountById(accountId2);
 
 

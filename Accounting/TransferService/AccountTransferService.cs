@@ -1,4 +1,5 @@
 ﻿using Currencies.Common.Conversion;
+using System;
 using System.Threading.Tasks;
 
 namespace Accounting
@@ -8,6 +9,8 @@ namespace Accounting
         private readonly IAccountRepository _repository;
         private readonly IAccountAcquiringService _acquiringService;
         private readonly ICurrencyConversionService _conversionService;
+        public event Action<Guid, Guid, decimal> Transfered;
+
 
         public AccountTransferService(
             IAccountRepository repository,
@@ -55,6 +58,7 @@ namespace Accounting
                     transferParameters.To,
                     acquire);
             }
+            Transfered(fromAccount.Id, toAccount.Id, transferParameters.Amount);
         }
     }
 }

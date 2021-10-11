@@ -7,6 +7,9 @@ namespace Accounting
     {
         private readonly IAccountRepository _repository;
 
+        public event Action<Guid, decimal> Acquired;
+        public event Action<Guid, decimal> Withdrawn;
+
         public  AccountAcquiringService(IAccountRepository repository)
         {
             _repository = repository;
@@ -16,6 +19,7 @@ namespace Accounting
         {
             var account = await _repository.GetAccountById(id);
             account.Amount += amount;
+            Acquired(id, amount);
         }
 
         public async Task Withdraw(Guid id, decimal amount)
@@ -26,6 +30,7 @@ namespace Accounting
                 throw new InvalidOperationException("Not enought money");
             }
             account.Amount -= amount;
+            Withdrawn(id, amount);
         }
     }
 }
